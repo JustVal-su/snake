@@ -69,6 +69,7 @@ def initialize_colors():
 
 
 def print_pixel(x, y, stdscr, string):
+    """Prints a singular square made up of 4 pixels."""
     if string == "0":
         stdscr.addstr(y, x, "▄", curses.color_pair(10))
         stdscr.addstr(y, x+1, "▄", curses.color_pair(11))
