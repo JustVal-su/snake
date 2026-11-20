@@ -33,12 +33,21 @@ def read_json(stdscr):
         data = json.load(file)
     return data["threeD"]
 
+def body_follow(map, snake_head_x, snake_head_y, snake_body, snake_length):
+    """Updates and stores body coordinates and length"""
+    if map[snake_head_x][snake_head_y] == "🍎" :
+        snake_length += 1
+    if len(snake_body) < snake_length:
+        snake_body.append([snake_head_x, snake_head_y])
+    if len(snake_body) = snake_length:
+        snake_body.pop(0)
     
 
-def detect_keys(stdscr, map, snake_head_x, snake_head_y): 
+def detect_keys(stdscr, map, snake_head_x, snake_head_y, snake_body, snake_length): 
     """Detects the user input"""
     direction = "none"
-    while True:
+    player_alive = True
+    while player_alive == True:
         key = stdscr.getch()
         if key == 259 and direction != "down":
             direction = "up"
@@ -52,14 +61,21 @@ def detect_keys(stdscr, map, snake_head_x, snake_head_y):
         elif key == 260 and direction != "left":
             direction = "right"
             snake_head_x -= 1
-
+        
         stdscr.clear()
         map = map_creation(12, 12)
         (random_x, random_y) = place_fruit(12, 12)
-        map[snake_head_y][snake_head_x] = "1"
-        map[random_y][random_x] = "🍎"
+        body_follow(map, snake_head_x, snake_head_y, snake_body, snake_length)
+        while map[snake_head_y][snake_head_x] == "🍎":
+            map[random_y][random_x] = "🍎"
+        map[snake_head_y][snake_head_x] = "1" 
+        for set in snake_body:
+            map[set[0]][set[-1]] = "1"
         render(stdscr, map)
         stdscr.addstr(direction)
+        score = snake_length - 3
+        stdscr.addstr(score)
+    #game_over()
 
 def initialize_colors():
     """Creates the colors and color pairs used in the game"""
@@ -151,16 +167,18 @@ def main(stdscr):
     """Entry point"""
     x = 12
     y = 12
+    snake_body = []
+    snake_length = 3
     initialize_colors()
     blank_map = map_creation(x, y)
-    map = blank_map
+    map = blank_map 
     (random_x, random_y) = place_fruit(x, y)
     map[random_y][random_x] = "🍎"
     (snake_head_x, snake_head_y) = place_snake_head(y)
     map[snake_head_y][snake_head_x] = "1"
     render(stdscr, map)
     #print(random_x, random_y)
-    detect_keys(stdscr, map, snake_head_x, snake_head_y)
+    detect_keys(stdscr, map, snake_head_x, snake_head_y, snake_body, snake_length)
     
 
 
