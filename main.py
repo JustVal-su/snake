@@ -37,9 +37,9 @@ def body_follow(map, snake_head_x, snake_head_y, snake_body, snake_length):
     """Updates and stores body coordinates and length"""
     if map[snake_head_x][snake_head_y] == "🍎" :
         snake_length += 1
-    if len(snake_body) < snake_length:
+    if len(snake_body) <= snake_length:
         snake_body.append([snake_head_x, snake_head_y])
-    if len(snake_body) = snake_length:
+    if len(snake_body) > snake_length:
         snake_body.pop(0)
     
 
@@ -66,15 +66,12 @@ def detect_keys(stdscr, map, snake_head_x, snake_head_y, snake_body, snake_lengt
         map = map_creation(12, 12)
         (random_x, random_y) = place_fruit(12, 12)
         body_follow(map, snake_head_x, snake_head_y, snake_body, snake_length)
-        while map[snake_head_y][snake_head_x] == "🍎":
-            map[random_y][random_x] = "🍎"
+        map[random_y][random_x] = "🍎"
         map[snake_head_y][snake_head_x] = "1" 
         for set in snake_body:
             map[set[0]][set[-1]] = "1"
         render(stdscr, map)
         stdscr.addstr(direction)
-        score = snake_length - 3
-        stdscr.addstr(score)
     #game_over()
 
 def initialize_colors():
