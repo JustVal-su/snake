@@ -25,7 +25,7 @@ import json
 def place_snake_head(map_height):
     """Initial position of the snake head"""
     snake_head_y = int(map_height/2)
-    snake_head_x = 2
+    snake_head_x = 3
     return (snake_head_x, snake_head_y)
 
 def read_json(stdscr):
@@ -36,42 +36,91 @@ def read_json(stdscr):
 def body_follow(map, snake_head_x, snake_head_y, snake_body, snake_length):
     """Updates and stores body coordinates and length"""
     if map[snake_head_x][snake_head_y] == "🍎" :
-        snake_length += 1
+        snake_body.append([snake_head_x, snake_head_y])
     if len(snake_body) <= snake_length:
         snake_body.append([snake_head_x, snake_head_y])
     if len(snake_body) > snake_length:
         snake_body.pop(0)
     
+def append_body(map, snake_body):
+    """Append all the snake cells to the map"""
+    for i in snake_body:
+        map[i[1]][i[0]] = "1"
 
-def detect_keys(stdscr, map, snake_head_x, snake_head_y, snake_body, snake_length): 
+def body_update(snake_body, snake_head_x, snake_head_y):
+    """Update snake body display"""
+    snake_body.pop()
+    snake_body.insert(0, [snake_head_x, snake_head_y])
+
+def check_apple(snake_head_coordonates, apple_coordonates, is_eaten, stdscr):
+    """Check if snake is eating an apple"""
+    if snake_head_coordonates == apple_coordonates:
+        return True
+    return False
+
+def detect_keys(stdscr, snake_body, snake_length, x, y): 
     """Detects the user input"""
-    direction = "none"
+    map = map_creation(x, y)
+    (snake_head_x, snake_head_y) = place_snake_head(y)
+
+    for i in range(snake_length):
+        snake_body.append([snake_head_x - i, snake_head_y])
+    append_body(map, snake_body)
+
+    (random_x, random_y) = place_fruit(x, y)
+    map[random_y][random_x] = "🍎"
+    render(stdscr, map)
+    
+    is_moving = False
+    is_eaten = False #todo: rename to is_apple_eaten
+    direction = "right"
     player_alive = True
     while player_alive == True:
         key = stdscr.getch()
         if key == 259 and direction != "down":
             direction = "up"
+            is_moving = True
             snake_head_y -= 1
+            body_update(snake_body, snake_head_x, snake_head_y)
         elif key == 258 and direction != "up":
             direction = "down"
+            is_moving = True
             snake_head_y += 1
-        elif key == 261 and direction != "right":
-            direction = "left"
-            snake_head_x += 1
-        elif key == 260 and direction != "left":
+            body_update(snake_body, snake_head_x, snake_head_y)
+        elif key == 261 and direction != "left":
             direction = "right"
+            is_moving = True
+            snake_head_x += 1
+            body_update(snake_body, snake_head_x, snake_head_y)
+        elif key == 260 and direction != "right":
+            direction = "left"
             snake_head_x -= 1
+            body_update(snake_body, snake_head_x, snake_head_y)
         
         stdscr.clear()
-        map = map_creation(12, 12)
-        (random_x, random_y) = place_fruit(12, 12)
-        body_follow(map, snake_head_x, snake_head_y, snake_body, snake_length)
+
+        is_eaten = check_apple((random_x, random_y), (snake_head_x, snake_head_y), is_eaten, stdscr)
+        if is_eaten == True:
+            (random_x, random_y) = place_fruit(x, y)
+            stdscr.addstr(str(is_eaten))
+            is_eaten = False
+            stdscr.addstr(str(random_x))
+        
+        map = map_creation(x, y)
+        #(random_x, random_y) = place_fruit(12, 12)
+        #body_follow(map, snake_head_x, snake_head_y, snake_body, snake_length)
         map[random_y][random_x] = "🍎"
-        map[snake_head_y][snake_head_x] = "1" 
-        for set in snake_body:
-            map[set[0]][set[-1]] = "1"
+        stdscr.addstr(str(random_x))
+        
+
+        #map[snake_head_y][snake_head_x] = "1"
+        
+        append_body(map, snake_body)
+        #map[snake_head_y][snake_head_x] = "1" 
+        #for y in range(snake):
+        #    for x in range(len(snake_body[y])):
+        #        map[snake_body[y]][snake_body[x]] = "1"
         render(stdscr, map)
-        stdscr.addstr(direction)
     #game_over()
 
 def initialize_colors():
@@ -162,20 +211,16 @@ def place_fruit(max_x, max_y=None):
 
 def main(stdscr):
     """Entry point"""
-    x = 12
-    y = 12
+    x = 15
+    y = 15
     snake_body = []
     snake_length = 3
     initialize_colors()
-    blank_map = map_creation(x, y)
-    map = blank_map 
-    (random_x, random_y) = place_fruit(x, y)
-    map[random_y][random_x] = "🍎"
-    (snake_head_x, snake_head_y) = place_snake_head(y)
-    map[snake_head_y][snake_head_x] = "1"
-    render(stdscr, map)
+    #blank_map = map_creation(x, y)
+    #map = blank_map 
+    
     #print(random_x, random_y)
-    detect_keys(stdscr, map, snake_head_x, snake_head_y, snake_body, snake_length)
+    detect_keys(stdscr, snake_body, snake_length, x, y)
     
 
 
