@@ -59,6 +59,16 @@ def check_apple(snake_head_coordonates, apple_coordonates, is_eaten, stdscr):
         return True
     return False
 
+def move_snake(snake_head_x, snake_head_y, direction):
+    if direction == "up":
+        snake_head_y -= 1
+    elif direction == "down":
+        snake_head_y += 1
+    elif direction == "right":
+        snake_head_x += 1
+    elif direction == "left":
+        snake_head_x -= 1
+
 def detect_keys(stdscr, snake_body, snake_length, x, y): 
     """Detects the user input"""
     map = map_creation(x, y)
@@ -77,24 +87,24 @@ def detect_keys(stdscr, snake_body, snake_length, x, y):
     direction = "right"
     player_alive = True
     while player_alive == True:
+        stdscr.timeout(1000)
         key = stdscr.getch()
         if key == 259 and direction != "down":
             direction = "up"
             is_moving = True
-            snake_head_y -= 1
         elif key == 258 and direction != "up":
             direction = "down"
             is_moving = True
-            snake_head_y += 1
         elif key == 261 and direction != "left":
             direction = "right"
             is_moving = True
-            snake_head_x += 1
         elif key == 260 and direction != "right":
             direction = "left"
-            snake_head_x -= 1
+        else:
+            pass
         
         stdscr.clear()
+        move_snake(snake_head_x, snake_head_y, direction)
 
         is_eaten = check_apple((random_x, random_y), (snake_head_x, snake_head_y), is_eaten, stdscr)
         if is_eaten == True:
