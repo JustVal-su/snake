@@ -47,9 +47,10 @@ def append_body(map, snake_body):
     for i in snake_body:
         map[i[1]][i[0]] = "1"
 
-def body_update(snake_body, snake_head_x, snake_head_y):
+def body_update(snake_body, snake_head_x, snake_head_y, snake_length):
     """Update snake body display"""
-    snake_body.pop()
+    if len(snake_body) > snake_length:
+        snake_body.pop()
     snake_body.insert(0, [snake_head_x, snake_head_y])
 
 def check_apple(snake_head_coordonates, apple_coordonates, is_eaten, stdscr):
@@ -81,30 +82,29 @@ def detect_keys(stdscr, snake_body, snake_length, x, y):
             direction = "up"
             is_moving = True
             snake_head_y -= 1
-            body_update(snake_body, snake_head_x, snake_head_y)
         elif key == 258 and direction != "up":
             direction = "down"
             is_moving = True
             snake_head_y += 1
-            body_update(snake_body, snake_head_x, snake_head_y)
         elif key == 261 and direction != "left":
             direction = "right"
             is_moving = True
             snake_head_x += 1
-            body_update(snake_body, snake_head_x, snake_head_y)
         elif key == 260 and direction != "right":
             direction = "left"
             snake_head_x -= 1
-            body_update(snake_body, snake_head_x, snake_head_y)
         
         stdscr.clear()
 
         is_eaten = check_apple((random_x, random_y), (snake_head_x, snake_head_y), is_eaten, stdscr)
         if is_eaten == True:
+            snake_length += 1
             (random_x, random_y) = place_fruit(x, y)
             stdscr.addstr(str(is_eaten))
             is_eaten = False
             stdscr.addstr(str(random_x))
+        
+        body_update(snake_body, snake_head_x, snake_head_y, snake_length)
         
         map = map_creation(x, y)
         #(random_x, random_y) = place_fruit(12, 12)
