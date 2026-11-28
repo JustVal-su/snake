@@ -1,5 +1,5 @@
 """Un jeu de snake fait par Valentin Jardon et Maxime Madignier 
-pour un projet de nsi en 2026. Le jeu tourne dans un terminal."""
+pour un projet de NSI en 2026. Le jeu tourne dans un terminal."""
 import random
 import math
 import time
@@ -27,6 +27,7 @@ import platform
 def initialize_keys():
     """Initialize the keys used in the program considerint the user's operating system"""
     keys = {}
+    # windows keys
     if platform.system() == "Windows":
         keys = {
         "up": 450,
@@ -34,6 +35,7 @@ def initialize_keys():
         "left": 452,
         "right": 454
     } 
+    # MacOS / Linux keys
     else:
         keys = {
             "up": 259,
