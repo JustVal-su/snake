@@ -3,10 +3,10 @@ Le programme ne marche pas sur pyzo à cause de l’utilisation de fonctions pyt
 Il est recommandé d’utiliser Visual Studio Code à la place.
 Les inputs sur un système avec MacOS ou Linux ne marcheront pas car les nombres qu'utilise le système pour identifier 
 quelle touche a été appuyée sont différents, il faut donc changer les valeurs suivantes dans la fonction detect_keys si le programme ne marche pas:
-    259 par 450;
-    258 par 456;
-    261 par 452;
-    260 par 454.
+    450 par 259;
+    456 par 258;
+    452 par 261;
+    454 par 260.
 
 # FICHIERS DU PROJET
 - main.py : programme Python.
