@@ -1,3 +1,7 @@
+# Problèmes non résolus 
+Le code pour quitter le jeu et mettre fin au programme ne marche actuellement pas, il faut donc cliquer sur ctrl + C au lieu de Q.
+
+
 # AVANT DE JOUER : 
 Le programme ne marche pas sur pyzo à cause de l’utilisation de fonctions python appartenant à curses. 
 Il est recommandé d’utiliser Visual Studio Code à la place.
