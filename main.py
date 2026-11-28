@@ -5,7 +5,7 @@ import time
 import curses
 import json
 
-#arrows
+#arrows ONLY FOR MacOS and Linux
 # up 259
 # down 258
 # left 261
@@ -150,6 +150,7 @@ def initialize_colors():
 
 
 def print_pixel(x, y, stdscr, string):
+    """Prints a square made of four 'pixel' character"""
     if string == "0":
         stdscr.addstr(y, x, "▄", curses.color_pair(10))
         stdscr.addstr(y, x+1, "▄", curses.color_pair(11))
@@ -160,7 +161,7 @@ def print_pixel(x, y, stdscr, string):
         stdscr.addstr(y, x, string, curses.color_pair(10))
 
 def map_creation (width, height=None):
-    """Crée un tableau de longueur de côté MAP_SIZE""" 
+    """Generates the empty map""" 
     if height == None:
         height = width
     map_line = []
